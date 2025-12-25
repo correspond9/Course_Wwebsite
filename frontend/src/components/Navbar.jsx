@@ -1,128 +1,76 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ChevronDown, Phone, Mail, Youtube } from 'lucide-react';
+import { Menu, X, Phone, Mail } from 'lucide-react';
 import { Button } from './ui/button';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
 
   const navItems = [
-    { name: 'HOME', path: '/' },
-    { 
-      name: 'TRADING STRATEGIES COURSES', 
-      path: '/courses/trading-strategies',
-      dropdown: true
-    },
-    { 
-      name: 'INVESTOR & TRADER COURSES', 
-      path: '/courses/investor-trader',
-      dropdown: true
-    },
-    { 
-      name: 'JOB ORIENTED COURSES', 
-      path: '/courses/job-oriented',
-      dropdown: true
-    },
-    { 
-      name: 'NISM/NCFM MODULE', 
-      path: '/courses/nism-ncfm',
-      dropdown: true
-    },
-    { 
-      name: 'MOCK TEST', 
-      path: '/mock-test',
-      dropdown: true
-    },
-    { 
-      name: 'More', 
-      path: '#',
-      dropdown: true
-    }
+    { name: 'Courses', path: '/' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' },
   ];
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="bg-[#B91C1C] text-white py-2 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm">
-          <div className="flex items-center gap-6">
-            <a href="#" className="flex items-center gap-2 hover:text-gray-200 transition-colors">
-              <Menu size={16} />
-              <span>Fees Submission</span>
-            </a>
-            <a href="tel:+919870510511" className="flex items-center gap-2 hover:text-gray-200 transition-colors">
-              <Phone size={16} />
-              <span>+91 98 705 10511</span>
-            </a>
-            <a href="mailto:info@ifmcinstitute.com" className="flex items-center gap-2 hover:text-gray-200 transition-colors">
-              <Mail size={16} />
-              <span>info@ifmcinstitute.com</span>
-            </a>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-white hover:text-white hover:bg-red-700">
-              Login
-            </Button>
-            <Button variant="ghost" size="sm" className="text-white hover:text-white hover:bg-red-700">
-              Register
-            </Button>
-            <div className="flex items-center gap-2 bg-white text-red-600 px-3 py-1 rounded-full">
-              <Youtube size={20} className="fill-red-600" />
-              <span className="font-semibold">14+ Million Views</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Navbar */}
-      <nav className="bg-[#1e3a5f] text-white shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4">
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3">
-              <div className="flex flex-col items-center">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="flex flex-col items-center transition-transform group-hover:scale-105">
                 <div className="flex items-end gap-0.5 mb-1">
-                  <div className="w-2 h-6 bg-red-600"></div>
-                  <div className="w-2 h-8 bg-red-600"></div>
-                  <div className="w-2 h-10 bg-red-600"></div>
-                  <div className="w-2 h-12 bg-red-600"></div>
-                  <div className="w-2 h-6 bg-blue-400"></div>
-                  <div className="w-2 h-8 bg-blue-400"></div>
-                  <div className="w-2 h-10 bg-blue-400"></div>
-                  <div className="w-2 h-12 bg-blue-400"></div>
+                  <div className="w-1.5 h-5 bg-accent-red rounded-full"></div>
+                  <div className="w-1.5 h-7 bg-accent-red rounded-full"></div>
+                  <div className="w-1.5 h-9 bg-accent-red rounded-full"></div>
+                  <div className="w-1.5 h-11 bg-accent-red rounded-full"></div>
+                  <div className="w-1.5 h-5 bg-navy rounded-full"></div>
+                  <div className="w-1.5 h-7 bg-navy rounded-full"></div>
+                  <div className="w-1.5 h-9 bg-navy rounded-full"></div>
+                  <div className="w-1.5 h-11 bg-navy rounded-full"></div>
                 </div>
-                <span className="text-2xl font-bold">IFMC</span>
+                <span className="text-xl font-bold text-slate-900">IFMC</span>
               </div>
-              <div className="border-l border-white/30 pl-3 h-14 flex flex-col justify-center">
-                <p className="text-xs leading-tight">Institute of Financial Market Courses</p>
-                <p className="text-xs text-gray-300 leading-tight">Your Ladder to Financial Success</p>
+              <div className="border-l border-slate-200 pl-3 h-12 flex flex-col justify-center">
+                <p className="text-xs leading-tight text-slate-900 font-medium">Institute of Financial</p>
+                <p className="text-xs text-slate-500 leading-tight">Market Courses</p>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-8">
               {navItems.map((item) => (
-                <div
+                <Link
                   key={item.name}
-                  className="relative"
-                  onMouseEnter={() => item.dropdown && setActiveDropdown(item.name)}
-                  onMouseLeave={() => setActiveDropdown(null)}
+                  to={item.path}
+                  className="text-slate-600 hover:text-navy font-medium text-sm transition-colors"
                 >
-                  <Link
-                    to={item.path}
-                    className="flex items-center gap-1 px-3 py-2 text-sm font-medium hover:bg-white/10 rounded transition-colors"
-                  >
-                    {item.name}
-                    {item.dropdown && <ChevronDown size={16} />}
-                  </Link>
-                </div>
+                  {item.name}
+                </Link>
               ))}
+              <div className="flex items-center gap-3 ml-4">
+                <a href="tel:+919870510511" className="text-slate-500 hover:text-navy transition-colors">
+                  <Phone size={18} />
+                </a>
+                <a href="mailto:info@ifmcinstitute.com" className="text-slate-500 hover:text-navy transition-colors">
+                  <Mail size={18} />
+                </a>
+              </div>
+              <div className="flex items-center gap-3 ml-2">
+                <Button variant="ghost" size="sm" className="text-slate-700 hover:text-navy font-medium">
+                  Login
+                </Button>
+                <Button size="sm" className="bg-navy hover:bg-navy-dark text-white font-medium rounded-lg px-6 shadow-soft">
+                  Sign Up
+                </Button>
+              </div>
             </div>
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2"
+              className="lg:hidden p-2 text-slate-600"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -131,33 +79,29 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-white/20">
+            <div className="lg:hidden py-6 border-t border-slate-200">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className="block px-4 py-3 text-sm hover:bg-white/10 transition-colors"
+                  className="block px-4 py-3 text-slate-600 hover:text-navy hover:bg-slate-50 rounded-lg transition-colors font-medium"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
+              <div className="mt-4 px-4 flex flex-col gap-2">
+                <Button variant="ghost" className="text-slate-700 w-full justify-center">
+                  Login
+                </Button>
+                <Button className="bg-navy hover:bg-navy-dark text-white w-full rounded-lg">
+                  Sign Up
+                </Button>
+              </div>
             </div>
           )}
         </div>
       </nav>
-
-      {/* Currency Selector */}
-      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40">
-        <div className="bg-[#1e3a5f] text-white">
-          <button className="block px-3 py-2 text-sm border-b border-white/20 hover:bg-white/10 transition-colors">
-            INR ₹
-          </button>
-          <button className="block px-3 py-2 text-sm hover:bg-white/10 transition-colors">
-            USD $
-          </button>
-        </div>
-      </div>
     </>
   );
 };
