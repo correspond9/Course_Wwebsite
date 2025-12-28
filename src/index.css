@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  background: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  color: white;
+}
+
+/* Squeeze Animation: Squish vertically, expand horizontally, then bounce back */
+@keyframes squeeze {
+  0% { transform: scale(1, 1); }
+  30% { transform: scale(1.08, 0.92); }
+  60% { transform: scale(0.95, 1.05); }
+  100% { transform: scale(1.02, 1.02); }
+}
+
+/* Shine Animation */
+@keyframes hoverShine {
+  0% { transform: translateX(-200%) skewX(-30deg); }
+  100% { transform: translateX(200%) skewX(-30deg); }
+}
+
+/* Base Premium Card Style */
+.premium-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.premium-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: translateX(-200%) skewX(-30deg);
+  pointer-events: none;
+}
+
+.premium-card:hover::after {
+  animation: hoverShine 0.7s ease-out;
+}
+
+/* NEW 3D CARD STYLE */
+.premium-3d-card {
+  position: relative;
+  overflow: hidden;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.premium-3d-card:hover {
+  animation: squeeze 0.5s ease-in-out both;
+  filter: brightness(1.1);
+  transform: translateY(-5px);
+}
+
+/* Pressed/Active State: Makes the button sink */
+.premium-3d-card:active {
+  transform: scale(0.96) translateY(5px) !important;
+  filter: brightness(0.85);
+  transition: all 0.1s ease;
+}
