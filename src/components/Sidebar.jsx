@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from './LoginModal';
 
-export default function Sidebar({ activePage, setActivePage }) {
+export default function Sidebar({ activePage, setActivePage, sidebarOpen, setSidebarOpen }) {
   const { user, isAdmin, logout } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const menuItems = [
+    { name: 'Home' },
     { name: 'Command Center', adminOnly: true },
     { name: 'Live Markets' },
     { name: 'Academy' },
@@ -15,25 +16,56 @@ export default function Sidebar({ activePage, setActivePage }) {
     { name: 'Contact Us' }
   ];
 
+  const handlePageChange = (page) => {
+    setActivePage(page);
+    setSidebarOpen(false);
+  };
+
   return (
     <>
-      <div className="fixed left-0 top-0 h-screen w-72 bg-[#0f172a]/70 backdrop-blur-xl border-r border-white/10 flex flex-col">
+      {sidebarOpen && (
+        <button
+          className="lg:hidden fixed inset-0 z-30 bg-slate-950/70 backdrop-blur-sm"
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Close navigation"
+        />
+      )}
 
-        <div className="p-6 border-b border-white/10">
-          <img src="/LOGO.png" alt="Financio" className="h-15" />
+      <div
+        className={`fixed left-0 top-0 z-40 h-screen w-72 bg-[#0b1228]/95 backdrop-blur-xl border-r border-white/10 flex flex-col transition-transform duration-300 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
+        <div className="p-5 border-b border-white/10">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <p className="text-lg font-black tracking-wide text-white">FINANCIO</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-blue-200 mt-1">By Great Ventures</p>
+            </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden h-9 w-9 rounded-lg bg-white/10 border border-white/10"
+              aria-label="Close navigation"
+            >
+              ✕
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-slate-300 leading-relaxed">
+            Financio is the brand name. Great Ventures is the registered firm for legal and payment operations.
+          </p>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {menuItems
             .filter(i => !i.adminOnly || isAdmin)
             .map(item => (
               <button
                 key={item.name}
-                onClick={() => setActivePage(item.name)}
+                onClick={() => handlePageChange(item.name)}
                 className={`w-full px-4 py-3 rounded-lg text-left ${
                   activePage === item.name
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-cyan-900/40'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
                 }`}
               >
                 {item.name}
@@ -59,10 +91,10 @@ export default function Sidebar({ activePage, setActivePage }) {
           )}
         </div>
 
-        <div className="p-4 text-xs text-gray-400 flex gap-3">
-          <button onClick={() => setActivePage('Terms')}>Terms</button>
-          <button onClick={() => setActivePage('Privacy')}>Privacy</button>
-          <button onClick={() => setActivePage('Refund')}>Refund</button>
+        <div className="p-4 text-xs text-gray-400 flex gap-3 border-t border-white/10">
+          <button onClick={() => handlePageChange('Terms')}>Terms</button>
+          <button onClick={() => handlePageChange('Privacy')}>Privacy</button>
+          <button onClick={() => handlePageChange('Refund')}>Refund</button>
         </div>
       </div>
 
