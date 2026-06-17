@@ -3,17 +3,17 @@ import GlassCard from './GlassCard';
 
 export default function Home({ setActivePage }) {
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">
-      <section className="relative overflow-hidden rounded-3xl border border-cyan-200/20 bg-gradient-to-br from-slate-950/95 via-blue-950/75 to-slate-900/95 p-6 md:p-8 lg:p-12 shadow-[0_20px_80px_rgba(15,23,42,0.5)]">
+    <div className="max-w-6xl mx-auto space-y-7 animate-fade-in">
+      <section className="relative overflow-hidden rounded-3xl border border-cyan-200/20 bg-gradient-to-br from-slate-950/95 via-blue-950/75 to-slate-900/95 p-5 md:p-6 lg:p-8 shadow-[0_20px_80px_rgba(15,23,42,0.5)]">
         <div className="pointer-events-none absolute -top-20 left-20 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
         <div className="pointer-events-none absolute top-20 -right-16 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
         <div className="pointer-events-none absolute inset-0 opacity-20 [background:radial-gradient(circle_at_12%_18%,rgba(255,255,255,0.2),transparent_28%),radial-gradient(circle_at_78%_32%,rgba(34,211,238,0.3),transparent_30%),radial-gradient(circle_at_58%_78%,rgba(59,130,246,0.25),transparent_28%)]" />
 
-        <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] gap-8 items-start">
+        <div className="relative grid lg:grid-cols-[1.08fr_0.92fr] gap-6 items-start">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-100/90">Market Education. Practical Execution.</p>
 
-            <div className="mt-5 inline-flex items-center gap-4 rounded-2xl border border-cyan-100/20 bg-slate-900/70 px-4 py-3">
+            <div className="mt-5 inline-flex items-center gap-3 rounded-2xl border border-cyan-100/20 bg-slate-900/70 px-4 py-3">
               <img
                 src="/LOGO.png"
                 alt="Financio"
@@ -23,28 +23,28 @@ export default function Home({ setActivePage }) {
               <p className="text-sm md:text-base font-semibold text-slate-100">by Great Ventures</p>
             </div>
 
-            <h1 className="mt-6 text-3xl md:text-4xl xl:text-5xl font-black leading-[1.1] text-white max-w-4xl">
+            <h1 className="mt-6 text-[2rem] md:text-[2.4rem] xl:text-[3rem] font-black leading-[1.08] text-white max-w-4xl">
               Professional market education for disciplined traders.
             </h1>
 
-            <p className="mt-4 text-base md:text-lg text-slate-200 max-w-2xl leading-relaxed">
+            <p className="mt-4 text-[0.98rem] md:text-[1.05rem] text-slate-200 max-w-2xl leading-relaxed">
               Financio is the customer-facing brand operated by Great Ventures, the legally registered firm for banking and payment operations.
             </p>
 
             <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl">
-              <div className="rounded-2xl border border-cyan-100/20 bg-cyan-300/10 px-4 py-4">
+              <div className="rounded-2xl border border-cyan-100/20 bg-cyan-300/10 px-3 py-3.5">
                 <p className="text-2xl">📊</p>
                 <p className="text-xs mt-2 text-slate-100 font-semibold">Live Market Context</p>
               </div>
-              <div className="rounded-2xl border border-blue-100/20 bg-blue-300/10 px-4 py-4">
+              <div className="rounded-2xl border border-blue-100/20 bg-blue-300/10 px-3 py-3.5">
                 <p className="text-2xl">🧠</p>
                 <p className="text-xs mt-2 text-slate-100 font-semibold">Structured Thinking</p>
               </div>
-              <div className="rounded-2xl border border-indigo-100/20 bg-indigo-300/10 px-4 py-4">
+              <div className="rounded-2xl border border-indigo-100/20 bg-indigo-300/10 px-3 py-3.5">
                 <p className="text-2xl">⚡</p>
                 <p className="text-xs mt-2 text-slate-100 font-semibold">Fast Execution</p>
               </div>
-              <div className="rounded-2xl border border-emerald-100/20 bg-emerald-300/10 px-4 py-4">
+              <div className="rounded-2xl border border-emerald-100/20 bg-emerald-300/10 px-3 py-3.5">
                 <p className="text-2xl">🛡️</p>
                 <p className="text-xs mt-2 text-slate-100 font-semibold">Risk Discipline</p>
               </div>

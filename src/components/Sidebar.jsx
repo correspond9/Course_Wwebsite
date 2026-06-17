@@ -32,11 +32,11 @@ export default function Sidebar({ activePage, setActivePage, sidebarOpen, setSid
       )}
 
       <div
-        className={`fixed left-0 top-0 z-40 h-screen w-72 bg-[#0b1228]/95 backdrop-blur-xl border-r border-white/10 flex flex-col transition-transform duration-300 ${
+        className={`fixed left-0 top-0 z-40 h-screen w-64 bg-[#0b1228]/95 backdrop-blur-xl border-r border-white/10 flex flex-col transition-transform duration-300 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className="p-5 border-b border-white/10">
+        <div className="p-4 border-b border-white/10">
           <div className="flex items-center justify-between gap-2">
             <div>
               <p className="text-lg font-black tracking-wide text-white">FINANCIO</p>
@@ -55,7 +55,7 @@ export default function Sidebar({ activePage, setActivePage, sidebarOpen, setSid
           </p>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 p-3 space-y-2 overflow-y-auto">
           {menuItems
             .filter(i => !i.adminOnly || isAdmin)
             .map(item => (
@@ -73,7 +73,7 @@ export default function Sidebar({ activePage, setActivePage, sidebarOpen, setSid
             ))}
         </nav>
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-3 border-t border-white/10">
           {user ? (
             <>
               <p className="text-sm text-white">{user.name}</p>
@@ -91,7 +91,7 @@ export default function Sidebar({ activePage, setActivePage, sidebarOpen, setSid
           )}
         </div>
 
-        <div className="p-4 text-xs text-gray-400 flex gap-3 border-t border-white/10">
+        <div className="p-3 text-xs text-gray-400 flex gap-3 border-t border-white/10">
           <button onClick={() => handlePageChange('Terms')}>Terms</button>
           <button onClick={() => handlePageChange('Privacy')}>Privacy</button>
           <button onClick={() => handlePageChange('Refund')}>Refund</button>

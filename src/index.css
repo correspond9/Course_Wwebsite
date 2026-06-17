@@ -20,6 +20,12 @@ body {
   overflow-x: hidden;
 }
 
+@media (min-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+}
+
 #root {
   min-height: 100vh;
   background: linear-gradient(160deg, rgba(2, 6, 23, 0.35), rgba(15, 23, 42, 0.2));

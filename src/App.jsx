@@ -57,7 +57,7 @@ function App() {
           </button>
         </div>
 
-        <div className="lg:ml-72 px-4 py-6 md:px-8 md:py-8 lg:p-10">
+        <div className="lg:ml-64 px-4 py-6 md:px-7 md:py-7 lg:px-8 lg:py-8">
           {renderPage()}
         </div>
       </div>
