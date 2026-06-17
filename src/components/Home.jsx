@@ -3,13 +3,13 @@ import GlassCard from './GlassCard';
 
 export default function Home({ setActivePage }) {
   return (
-    <div className="max-w-6xl mx-auto space-y-7 animate-fade-in">
+    <div className="w-full space-y-7 animate-fade-in">
       <section className="relative overflow-hidden rounded-3xl border border-cyan-200/20 bg-gradient-to-br from-slate-950/95 via-blue-950/75 to-slate-900/95 p-5 md:p-6 lg:p-8 shadow-[0_20px_80px_rgba(15,23,42,0.5)]">
         <div className="pointer-events-none absolute -top-20 left-20 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
         <div className="pointer-events-none absolute top-20 -right-16 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
         <div className="pointer-events-none absolute inset-0 opacity-20 [background:radial-gradient(circle_at_12%_18%,rgba(255,255,255,0.2),transparent_28%),radial-gradient(circle_at_78%_32%,rgba(34,211,238,0.3),transparent_30%),radial-gradient(circle_at_58%_78%,rgba(59,130,246,0.25),transparent_28%)]" />
 
-        <div className="relative grid lg:grid-cols-[1.08fr_0.92fr] gap-6 items-start">
+        <div className="relative grid xl:grid-cols-[1.05fr_0.95fr] gap-6 items-start">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-100/90">Market Education. Practical Execution.</p>
 
@@ -31,7 +31,7 @@ export default function Home({ setActivePage }) {
               Financio is the customer-facing brand operated by Great Ventures, the legally registered firm for banking and payment operations.
             </p>
 
-            <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl">
+            <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl">
               <div className="rounded-2xl border border-cyan-100/20 bg-cyan-300/10 px-3 py-3.5">
                 <p className="text-2xl">📊</p>
                 <p className="text-xs mt-2 text-slate-100 font-semibold">Live Market Context</p>
@@ -72,7 +72,7 @@ export default function Home({ setActivePage }) {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 xl:sticky xl:top-6">
             <div className="rounded-3xl border border-cyan-100/30 bg-gradient-to-br from-cyan-400/10 via-blue-500/10 to-slate-900/60 p-4 md:p-5 shadow-[0_16px_45px_rgba(6,182,212,0.2)]">
               <p className="text-xs uppercase tracking-[0.26em] text-cyan-100 font-semibold">Official Identity Spotlight</p>
               <p className="text-xs text-slate-300 mt-2">Primary identity cards for payment gateway, legal, and customer clarity.</p>
@@ -138,7 +138,7 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
-      <section className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <section className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <GlassCard className="p-5">
           <p className="text-2xl">🎓</p>
           <h3 className="text-lg font-bold mt-3">Stepwise Learning</h3>
@@ -161,7 +161,7 @@ export default function Home({ setActivePage }) {
         </GlassCard>
       </section>
 
-      <section className="grid lg:grid-cols-[1.1fr_0.9fr] gap-4">
+      <section className="grid xl:grid-cols-[1.15fr_0.85fr] gap-4">
         <GlassCard className="p-6">
           <p className="text-xs uppercase tracking-[0.22em] text-blue-200">Inside Financio</p>
           <h2 className="text-2xl md:text-3xl font-black mt-3">A home for structured, practical trading growth.</h2>
