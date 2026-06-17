@@ -39,7 +39,7 @@ export default function Sidebar({ activePage, setActivePage, sidebarOpen, setSid
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center justify-between gap-2">
             <div>
-              <p className="text-lg font-black tracking-wide text-white">FINANCIO</p>
+              <img src="/LOGO.png" alt="Financio" className="h-14 w-auto object-contain" />
               <p className="text-[10px] uppercase tracking-[0.2em] text-blue-200 mt-1">By Great Ventures</p>
             </div>
             <button

@@ -13,16 +13,6 @@ export default function Home({ setActivePage }) {
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-100/90">Market Education. Practical Execution.</p>
 
-            <div className="mt-5 inline-flex items-center gap-3 rounded-2xl border border-cyan-100/20 bg-slate-900/70 px-4 py-3">
-              <img
-                src="/LOGO.png"
-                alt="Financio"
-                className="h-12 md:h-14 w-auto object-contain"
-              />
-              <div className="h-10 w-px bg-white/20" />
-              <p className="text-sm md:text-base font-semibold text-slate-100">by Great Ventures</p>
-            </div>
-
             <h1 className="mt-6 text-[2rem] md:text-[2.4rem] xl:text-[3rem] font-black leading-[1.08] text-white max-w-4xl">
               Professional market education for disciplined traders.
             </h1>
@@ -70,6 +60,44 @@ export default function Home({ setActivePage }) {
                 Talk To Team
               </button>
             </div>
+
+            <GlassCard className="mt-6 p-4 border-cyan-200/25 bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-slate-900/60">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-cyan-100">Learning Journey Visual</p>
+                  <p className="text-sm text-slate-300 mt-1">A structured path from foundation to execution confidence.</p>
+                </div>
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-300/20 text-xl">🎯</span>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/55 p-3">
+                <div className="grid grid-cols-12 gap-1.5 items-end h-20">
+                  <div className="col-span-1 rounded-sm bg-cyan-400/40 h-4" />
+                  <div className="col-span-1 rounded-sm bg-cyan-400/50 h-7" />
+                  <div className="col-span-1 rounded-sm bg-cyan-400/55 h-9" />
+                  <div className="col-span-1 rounded-sm bg-cyan-400/65 h-12" />
+                  <div className="col-span-1 rounded-sm bg-blue-400/65 h-10" />
+                  <div className="col-span-1 rounded-sm bg-blue-400/70 h-14" />
+                  <div className="col-span-1 rounded-sm bg-blue-400/75 h-16" />
+                  <div className="col-span-1 rounded-sm bg-indigo-400/75 h-12" />
+                  <div className="col-span-1 rounded-sm bg-indigo-400/75 h-18" />
+                  <div className="col-span-1 rounded-sm bg-emerald-400/75 h-14" />
+                  <div className="col-span-1 rounded-sm bg-emerald-400/80 h-16" />
+                  <div className="col-span-1 rounded-sm bg-emerald-400/85 h-20" />
+                </div>
+                <div className="mt-3 flex items-center justify-between text-[11px] text-slate-300">
+                  <span>Foundation</span>
+                  <span>Skill Build</span>
+                  <span>Mastery</span>
+                </div>
+              </div>
+
+              <div className="mt-4 grid sm:grid-cols-3 gap-2">
+                <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100">🎓 Core Concepts</div>
+                <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100">📈 Live Practice</div>
+                <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100">🧠 Decision Systems</div>
+              </div>
+            </GlassCard>
           </div>
 
           <div className="space-y-4 xl:sticky xl:top-6">
@@ -80,12 +108,13 @@ export default function Home({ setActivePage }) {
               <div className="mt-4 space-y-3">
                 <div className="rounded-2xl border border-cyan-200/30 bg-slate-950/70 p-5 shadow-[0_8px_30px_rgba(34,211,238,0.2)]">
                   <div className="flex items-start justify-between gap-3">
-                    <div>
+                    <div className="flex-1">
+                      <img src="/LOGO.png" alt="Financio logo" className="h-14 w-auto object-contain" />
                       <p className="text-xs uppercase tracking-[0.24em] text-cyan-100">Brand Name</p>
                       <h3 className="text-3xl font-black mt-1 text-white">Financio</h3>
                       <p className="mt-2 text-sm text-slate-300">Public-facing name for website, learning programs, and customer communication.</p>
                     </div>
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-300/20 text-2xl shrink-0">💠</span>
+                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-300/20 text-2xl shrink-0">✅</span>
                   </div>
                 </div>
 

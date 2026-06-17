@@ -3,20 +3,51 @@ import GlassCard from './GlassCard';
 
 export default function ContactUs() {
   const [contact, setContact] = useState({
-    email: '',
-    phone: '',
-    address: ''
+    email: 'info@financio.pro',
+    phone: '+91 89289 40525',
+    address: '1307 Ozone Biz Center, Belasis Road, Mumbai 400008'
   });
 
-  useEffect(() => {
-    const saved = localStorage.getItem('admin_contact_config');
-    if (saved) {
+  const loadContactConfig = () => {
+    const email = localStorage.getItem('public_email');
+    const phone = localStorage.getItem('support_phone');
+    const address = localStorage.getItem('office_address');
+
+    // Backward compatibility for older saved object format.
+    const legacy = localStorage.getItem('admin_contact_config');
+
+    if (email || phone || address) {
+      setContact({
+        email: email || 'info@financio.pro',
+        phone: phone || '+91 89289 40525',
+        address: address || '1307 Ozone Biz Center, Belasis Road, Mumbai 400008'
+      });
+      return;
+    }
+
+    if (legacy) {
       try {
-        setContact(JSON.parse(saved));
+        const parsed = JSON.parse(legacy);
+        setContact({
+          email: parsed.email || 'info@financio.pro',
+          phone: parsed.phone || '+91 89289 40525',
+          address: parsed.address || '1307 Ozone Biz Center, Belasis Road, Mumbai 400008'
+        });
       } catch {
         console.warn('Invalid contact config');
       }
     }
+  };
+
+  useEffect(() => {
+    loadContactConfig();
+
+    const onStorageUpdate = () => loadContactConfig();
+    window.addEventListener('storage', onStorageUpdate);
+
+    return () => {
+      window.removeEventListener('storage', onStorageUpdate);
+    };
   }, []);
 
   return (
