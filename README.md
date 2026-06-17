@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Financio Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Vite + React frontend for Financio.
 
-## Available Scripts
+## Live Markets Integration (Free API)
 
-In the project directory, you can run:
+The Live Markets page is integrated with the open-source API from:
 
-### `npm start`
+https://github.com/0xramm/Indian-Stock-Market-API
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### What is integrated
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Top Gainers and Top Losers are fetched from `/stock/list?symbols=...&res=num`.
+2. Nifty and Bank Nifty cards use best-available symbol candidates and fallback order.
+3. Data auto-refresh runs every 30 seconds.
+4. Timeout and error handling are included, so temporary upstream delays do not break the page.
 
-### `npm test`
+## Production-safe API routing
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Because the upstream free API is HTTP (`http://65.0.104.9`) and production site is HTTPS, this project uses a Vercel serverless proxy:
 
-### `npm run build`
+1. Serverless function: `api/indian-stock.js`
+2. Public route: `/api/indian-stock`
+3. Markets frontend calls this route by default.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This avoids browser mixed-content blocking on HTTPS.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Environment variable (optional override)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+If you want to bypass proxy in specific environments:
 
-### `npm run eject`
+`VITE_INDIAN_STOCK_API_BASE`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Example:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`VITE_INDIAN_STOCK_API_BASE=http://65.0.104.9`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Note: use this only in HTTP-safe/local scenarios. On HTTPS production, proxy route is recommended.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Run locally
 
-## Learn More
+1. Install dependencies:
+	`npm install`
+2. Start dev server:
+	`npm run dev`
+3. Open shown local URL and go to Live Markets page.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Deploy (Vercel + GitHub)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Push to `main`.
+2. Vercel auto-deploys.
+3. Live Markets will fetch via `/api/indian-stock` automatically.
 
-### Code Splitting
+## Upstream API limits and behavior
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+As per upstream docs:
 
-### Analyzing the Bundle Size
+1. Free and no API key.
+2. Suggested limit ~60 requests per minute.
+3. Market close/holidays can return last available data.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This app already keeps request frequency low with batched requests and 30-second refresh.

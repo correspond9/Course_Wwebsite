@@ -109,7 +109,7 @@ export default function Home({ setActivePage }) {
                 <div className="rounded-2xl border border-cyan-200/30 bg-slate-950/70 p-5 shadow-[0_8px_30px_rgba(34,211,238,0.2)]">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <img src="/LOGO.png" alt="Financio logo" className="h-14 w-auto object-contain" />
+                      <img src="/LOGO.png" alt="Financio logo" className="h-[6.3rem] w-auto object-contain" />
                       <p className="text-xs uppercase tracking-[0.24em] text-cyan-100">Brand Name</p>
                       <h3 className="text-3xl font-black mt-1 text-white">Financio</h3>
                       <p className="mt-2 text-sm text-slate-300">Public-facing name for website, learning programs, and customer communication.</p>
@@ -123,7 +123,7 @@ export default function Home({ setActivePage }) {
                     <img
                       src="/GREAT_VENTURES.png"
                       alt="Great Ventures"
-                      className="h-16 w-auto object-contain rounded-lg bg-white/5 px-2 py-1"
+                      className="h-[7.2rem] w-auto object-contain rounded-lg bg-white/5 px-2 py-1"
                     />
                     <div className="flex-1">
                       <p className="text-xs uppercase tracking-[0.24em] text-blue-100">Legal Entity</p>

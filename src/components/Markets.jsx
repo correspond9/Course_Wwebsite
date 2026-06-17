@@ -1,86 +1,188 @@
-import React, { useEffect, useState } from 'react';
-import dhanSocket from '../services/DhanSocket';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import GlassCard from './GlassCard';
 
-// Base watchlist universe
-const WATCHLIST = [
-  { id: '13', symbol: 'NIFTY', name: 'NSE Nifty 50', prevClose: 0 },
-  { id: '25', symbol: 'BANKNIFTY', name: 'NSE Bank Nifty', prevClose: 0 },
-  { id: '2885', symbol: 'RELIANCE', prevClose: 1565.00 },
-  { id: '1333', symbol: 'HDFCBANK', prevClose: 985.00 },
-  { id: '11536', symbol: 'TCS', prevClose: 3200.00 },
-  { id: '1594', symbol: 'INFY', prevClose: 1480.00 },
-  { id: '4963', symbol: 'ICICIBANK', prevClose: 1340.00 },
-  { id: '3045', symbol: 'SBIN', prevClose: 975.00 },
-  { id: '1660', symbol: 'ITC', prevClose: 405.00 },
-  { id: '1922', symbol: 'KOTAKBANK', prevClose: 2190.00 },
-  { id: '11483', symbol: 'LT', prevClose: 4070.00 },
-  { id: '5900', symbol: 'AXISBANK', prevClose: 1265.00 }
+const STOCK_SYMBOLS = [
+  'RELIANCE',
+  'HDFCBANK',
+  'TCS',
+  'INFY',
+  'ICICIBANK',
+  'SBIN',
+  'ITC',
+  'KOTAKBANK',
+  'LT',
+  'AXISBANK'
 ];
 
+const NIFTY_CANDIDATES = ['NIFTYBEES', 'NIFTY50', '^NSEI', 'NIFTY'];
+const BANK_NIFTY_CANDIDATES = ['BANKBEES', 'BANKNIFTY', '^NSEBANK'];
+const REFRESH_MS = 30_000;
+const REQUEST_TIMEOUT_MS = 12_000;
+
+const API_BASE = import.meta.env.VITE_INDIAN_STOCK_API_BASE || '';
+
+const toNumber = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const formatPrice = (value) => {
+  if (!Number.isFinite(value)) return 'Loading...';
+  return value.toLocaleString('en-IN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+};
+
+const buildUrl = (path, params = {}) => {
+  const query = new URLSearchParams(params);
+
+  if (API_BASE) {
+    const base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+    return `${base}${path}${query.toString() ? `?${query.toString()}` : ''}`;
+  }
+
+  // Use direct upstream only during local http development.
+  if (import.meta.env.DEV && window.location.protocol === 'http:') {
+    return `http://65.0.104.9${path}${query.toString() ? `?${query.toString()}` : ''}`;
+  }
+
+  const proxyQuery = new URLSearchParams({ path, ...params });
+  return `/api/indian-stock?${proxyQuery.toString()}`;
+};
+
+const fetchJsonWithTimeout = async (url) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok || payload?.status === 'error') {
+      throw new Error(payload?.message || 'Market data fetch failed');
+    }
+
+    return payload;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
+const fetchIndexFromCandidates = async (candidates) => {
+  for (const symbol of candidates) {
+    try {
+      const payload = await fetchJsonWithTimeout(
+        buildUrl('/stock', { symbol, res: 'num' })
+      );
+
+      const lastPrice = toNumber(payload?.data?.last_price);
+      const change = toNumber(payload?.data?.change) || 0;
+      const previousClose = toNumber(payload?.data?.previous_close);
+
+      if (lastPrice !== null) {
+        return {
+          symbol: payload?.symbol || symbol,
+          lastPrice,
+          change,
+          previousClose: previousClose ?? lastPrice - change
+        };
+      }
+    } catch {
+      // Try next symbol candidate.
+    }
+  }
+
+  return null;
+};
+
 const Markets = () => {
-  const [niftyPrice, setNiftyPrice] = useState(0);
-  const [bankNiftyPrice, setBankNiftyPrice] = useState(0);
-  const [livePrices, setLivePrices] = useState({});
-  const [refreshTick, setRefreshTick] = useState(0);
+  const [niftyPrice, setNiftyPrice] = useState(null);
+  const [bankNiftyPrice, setBankNiftyPrice] = useState(null);
+  const [stocks, setStocks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [lastUpdated, setLastUpdated] = useState('');
 
-  useEffect(() => {
-    dhanSocket.connect();
+  const loadMarketData = useCallback(async () => {
+    try {
+      const [stockPayload, niftyData, bankNiftyData] = await Promise.all([
+        fetchJsonWithTimeout(
+          buildUrl('/stock/list', {
+            symbols: STOCK_SYMBOLS.join(','),
+            res: 'num'
+          })
+        ),
+        fetchIndexFromCandidates(NIFTY_CANDIDATES),
+        fetchIndexFromCandidates(BANK_NIFTY_CANDIDATES)
+      ]);
 
-    const unsub = dhanSocket.onPriceUpdate((id, price) => {
-      if (!price || price <= 0) return;
+      const stockList = Array.isArray(stockPayload?.stocks) ? stockPayload.stocks : [];
 
-      if (id === '13') {
-        setNiftyPrice(price.toFixed(2));
-        return;
-      }
+      const normalized = stockList
+        .map((item, index) => {
+          const price = toNumber(item?.last_price);
+          const change = toNumber(item?.change);
+          const previousClose = toNumber(item?.previous_close);
 
-      if (id === '25') {
-        setBankNiftyPrice(price.toFixed(2));
-        return;
-      }
+          if (price === null) return null;
 
-      setLivePrices(prev => ({ ...prev, [id]: price }));
-    });
+          return {
+            id: `${item?.symbol || 'STOCK'}-${index}`,
+            symbol: item?.symbol || 'N/A',
+            ltp: price,
+            change: change ?? 0,
+            prevClose: previousClose ?? price - (change ?? 0)
+          };
+        })
+        .filter(Boolean);
 
-    // Force hourly refresh to recalc top 5 lists
-    const hourlyRefresh = setInterval(() => {
-      setRefreshTick(prev => prev + 1);
-    }, 60 * 60 * 1000);
-
-    return () => {
-      unsub();
-      clearInterval(hourlyRefresh);
-    };
+      setStocks(normalized);
+      setNiftyPrice(niftyData?.lastPrice ?? null);
+      setBankNiftyPrice(bankNiftyData?.lastPrice ?? null);
+      setLastUpdated(new Date().toLocaleTimeString('en-IN'));
+      setError('');
+    } catch {
+      setError('Live market feed is temporarily delayed. Showing latest available values when possible.');
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const getStockData = (stock) => {
-    const current = livePrices[stock.id] || stock.prevClose;
-    const change = current - stock.prevClose;
+  useEffect(() => {
+    loadMarketData();
 
-    return {
-      ...stock,
-      ltp: typeof current === 'number' ? current.toFixed(2) : current,
-      change,
-      isPositive: change >= 0
+    const interval = setInterval(() => {
+      loadMarketData();
+    }, REFRESH_MS);
+
+    return () => {
+      clearInterval(interval);
     };
-  };
+  }, [loadMarketData]);
 
-  const allProcessed = WATCHLIST.filter(s => s.id !== '13' && s.id !== '25')
-    .map(getStockData);
-
-  const gainers = [...allProcessed]
+  const gainers = useMemo(() => [...stocks]
     .filter(s => s.change > 0)
     .sort((a, b) => b.change - a.change)
-    .slice(0, 5);
+    .slice(0, 5), [stocks]);
 
-  const losers = [...allProcessed]
+  const losers = useMemo(() => [...stocks]
     .filter(s => s.change < 0)
     .sort((a, b) => a.change - b.change)
-    .slice(0, 5);
+    .slice(0, 5), [stocks]);
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {error && (
+        <GlassCard className="p-4 border-yellow-400/30 bg-yellow-500/5">
+          <p className="text-sm text-yellow-200">{error}</p>
+        </GlassCard>
+      )}
+
+      <div className="text-xs text-financio-muted">
+        Data source: Indian Stock Market API (free public feed)
+        {lastUpdated ? ` | Last updated: ${lastUpdated}` : ''}
+      </div>
       
       {/* ===== INDICES SECTION ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -93,11 +195,11 @@ const Markets = () => {
                 NSE Nifty 50
               </h3>
               <div className="text-4xl font-bold text-white mt-2 font-mono">
-                {niftyPrice || "Loading..."}
+                {formatPrice(niftyPrice)}
               </div>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-financio-success/20 text-financio-success">
-              ● Live
+              ● Feed
             </span>
           </div>
         </GlassCard>
@@ -110,11 +212,11 @@ const Markets = () => {
                 NSE Bank Nifty
               </h3>
               <div className="text-4xl font-bold text-white mt-2 font-mono">
-                {bankNiftyPrice || "Loading..."}
+                {formatPrice(bankNiftyPrice)}
               </div>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-financio-success/20 text-financio-success">
-              ● Live
+              ● Feed
             </span>
           </div>
         </GlassCard>
@@ -140,12 +242,12 @@ const Markets = () => {
                   <tr key={item.id} className="hover:bg-white/5 transition-colors">
                     <td className="py-3 font-medium text-white">{item.symbol}</td>
                     <td className="py-3 text-right font-mono text-financio-success">
-                      ₹{item.ltp}
+                      ₹{formatPrice(item.ltp)}
                     </td>
                   </tr>
                 )) : (
                   <tr><td colSpan="2" className="py-4 text-center text-financio-muted">
-                    Loading...
+                    {isLoading ? 'Loading...' : 'No gainers in current snapshot'}
                   </td></tr>
                 )}
               </tbody>
@@ -169,12 +271,12 @@ const Markets = () => {
                   <tr key={item.id} className="hover:bg-white/5 transition-colors">
                     <td className="py-3 font-medium text-white">{item.symbol}</td>
                     <td className="py-3 text-right font-mono text-financio-danger">
-                      ₹{item.ltp}
+                      ₹{formatPrice(item.ltp)}
                     </td>
                   </tr>
                 )) : (
                   <tr><td colSpan="2" className="py-4 text-center text-financio-muted">
-                    Loading...
+                    {isLoading ? 'Loading...' : 'No losers in current snapshot'}
                   </td></tr>
                 )}
               </tbody>
