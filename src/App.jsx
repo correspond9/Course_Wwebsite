@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
 
 import Sidebar from './components/Sidebar';
@@ -13,17 +13,73 @@ import Privacy from './components/Privacy';
 import RefundPolicy from './components/RefundPolicy';
 import Home from './components/Home';
 
+const PAGE_TO_PATH = {
+  Home: '/',
+  'Command Center': '/command-center',
+  'Live Markets': '/live-markets',
+  Academy: '/academy',
+  Dashboard: '/dashboard',
+  'About Us': '/about-us',
+  'Contact Us': '/contact-us',
+  Terms: '/terms',
+  Privacy: '/privacy',
+  Refund: '/refund'
+};
+
+const PATH_TO_PAGE = Object.entries(PAGE_TO_PATH).reduce((acc, [page, path]) => {
+  acc[path] = page;
+  return acc;
+}, {});
+
+const normalizePath = (path) => {
+  if (!path) return '/';
+  const cleaned = path.toLowerCase().replace(/\/+$/, '');
+  return cleaned === '' ? '/' : cleaned;
+};
+
+const getPageFromPath = (path) => {
+  const normalized = normalizePath(path);
+  return PATH_TO_PAGE[normalized] || 'Home';
+};
+
 function App() {
-  const [activePage, setActivePage] = useState('Home');
+  const [activePage, setActivePage] = useState(() => {
+    if (typeof window === 'undefined') return 'Home';
+    return getPageFromPath(window.location.pathname);
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const navigateToPage = useCallback((page, options = {}) => {
+    const { replace = false } = options;
+    const validPage = PAGE_TO_PATH[page] ? page : 'Home';
+    const targetPath = PAGE_TO_PATH[validPage];
+
+    setActivePage(validPage);
+
+    if (typeof window === 'undefined') return;
+
+    if (normalizePath(window.location.pathname) !== targetPath) {
+      const method = replace ? 'replaceState' : 'pushState';
+      window.history[method]({}, '', targetPath);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActivePage(getPageFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const renderPage = () => {
     switch (activePage) {
-      case 'Home': return <Home setActivePage={setActivePage} />;
+      case 'Home': return <Home setActivePage={navigateToPage} />;
       case 'Command Center': return <CommandCenter />;
       case 'Live Markets': return <Markets />;
       case 'Academy': return <Programs />;
-      case 'Dashboard': return <Dashboard setActivePage={setActivePage} />;
+      case 'Dashboard': return <Dashboard setActivePage={navigateToPage} />;
       case 'About Us': return <AboutUs />;
       case 'Contact Us': return <ContactUs />;
       case 'Terms': return <Terms />;
@@ -38,7 +94,7 @@ function App() {
       <div className="min-h-screen text-white">
         <Sidebar
           activePage={activePage}
-          setActivePage={setActivePage}
+          setActivePage={navigateToPage}
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
         />
