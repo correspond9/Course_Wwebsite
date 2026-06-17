@@ -30,6 +30,7 @@ const normalizeTicker = (symbol) => {
   if (!symbol) return null;
   const clean = String(symbol).trim().toUpperCase();
   if (!clean) return null;
+  if (clean.startsWith('^')) return clean;
   if (clean.endsWith('.NS') || clean.endsWith('.BO')) return clean;
   return `${clean}.NS`;
 };

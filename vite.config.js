@@ -7,6 +7,7 @@ const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] })
 const normalizeTicker = (symbol) => {
   const clean = String(symbol || '').trim().toUpperCase()
   if (!clean) return null
+  if (clean.startsWith('^')) return clean
   if (clean.endsWith('.NS') || clean.endsWith('.BO')) return clean
   return `${clean}.NS`
 }
