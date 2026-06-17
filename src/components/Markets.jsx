@@ -42,11 +42,6 @@ const buildUrl = (path, params = {}) => {
     return `${base}${path}${query.toString() ? `?${query.toString()}` : ''}`;
   }
 
-  // Use direct upstream only during local http development.
-  if (import.meta.env.DEV && window.location.protocol === 'http:') {
-    return `http://65.0.104.9${path}${query.toString() ? `?${query.toString()}` : ''}`;
-  }
-
   const proxyQuery = new URLSearchParams({ path, ...params });
   return `/api/indian-stock?${proxyQuery.toString()}`;
 };
